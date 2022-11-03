@@ -1,14 +1,17 @@
 <?php
 
+use App\Http\Controllers\ComentController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\EventController;
 
 Route::get('/', [EventController::class, 'index']);
+Route::get('/events/edit/{id}', [ComentController::class, 'index']);
 
 //create
 Route::get('/events/create', [EventController::class, 'create'])->middleware('auth');
 Route::post('/events', [EventController::class, 'store']);
+Route::get('/events/{id}', [ComentController::class, 'store']);
+Route::post('/events/{id}', [ComentController::class, 'store']);
 
 //edit
 Route::get('/events/edit/{id}', [EventController::class,'edit'])->middleware('auth');

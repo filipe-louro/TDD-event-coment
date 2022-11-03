@@ -17,7 +17,6 @@ class EventController extends Controller
         }else {
             $events = Event::all();
         }
-
         return view('welcome', compact('events', 'search'));
     }
 
@@ -59,7 +58,6 @@ class EventController extends Controller
 
     public function edit($id){
         $event = Event::findOrFail($id);
-
         $user = auth()->user();
         if($user->id != $event->user_id){
             return redirect('/dashboard');
@@ -74,14 +72,12 @@ class EventController extends Controller
         $event->local = $request->input('local');
         $event->privado = $request->input('privado');
         $event->privado = ($event->privado == "sim"? 1:0);
-
         $event->save();
         return redirect('/');
     }
 
     public function show($id){
         $event = Event::findOrFail($id);
-
         $user = auth()->user();
         $hasUserJoined = false;
         if($user){
@@ -91,9 +87,7 @@ class EventController extends Controller
                     $hasUserJoined = true;
                 }
             }
-
         }
-
         $eventUser = User::where('id', $event->user_id)->first()->toArray();
         return view('events.show', compact('event','eventUser','hasUserJoined'));
     }
@@ -101,21 +95,18 @@ class EventController extends Controller
     public function dashboard(){
         $user = auth()->user();
         $events = $user->events;
-
         $eventsAs = $user->eventsAs;
         return view('events.dashboard', compact('events','user','eventsAs'));
     }
 
     public function destroy($id) {
         Event::findOrFail($id)->delete();
-
         return redirect('/dashboard');
     }
 
     public function joinEvent($id) {
        $user = auth()->user();
        $user->eventsAs()->attach($id);
-
        $event = Event::findOrFail($id);
        return redirect('/dashboard');
     }
@@ -124,8 +115,6 @@ class EventController extends Controller
         $user = auth()->user();
         $user->eventsAs()->detach($id);
         $event = Event::findOrFail($id);
-
-
         return redirect('/dashboard');
     }
 }
