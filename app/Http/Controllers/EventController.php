@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\User;
@@ -55,6 +56,16 @@ class EventController extends Controller
         //Flash Messages
         return redirect('/')->with('msg', 'Evento criado com sucesso');
     }
+    //Envio de comentário
+    public function armazenar(Request $request){
+        $comment = new Comment;
+        $comment->comentario = $request->comentario;
+        $user = auth()->user();
+        $comment->user_id = $user->id;
+        $comment->event_id = $user->id;
+        $comment->save();
+        return redirect('/')->with('msg', 'Comentário publicado com sucesso!');
+    }
 
     public function edit($id){
         $event = Event::findOrFail($id);
@@ -88,8 +99,9 @@ class EventController extends Controller
                 }
             }
         }
+        $comments = Comment::all();
         $eventUser = User::where('id', $event->user_id)->first()->toArray();
-        return view('events.show', compact('event','eventUser','hasUserJoined'));
+        return view('events.show', compact('event','eventUser','hasUserJoined', 'comments'));
     }
 
     public function dashboard(){
